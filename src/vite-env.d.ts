@@ -1,3 +1,4 @@
 /// <reference types="vite/client" />
-VITE_WEATHER_API_KEY=e4b4c527fa35234244224a6833cb92db
+VITE_OPENWEATHER_API_KEY=3e7b1963c948022f1290e4aaa58a3b7d
+
 
