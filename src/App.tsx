@@ -6,11 +6,10 @@ import { WeatherDetails } from './components/WeatherDetails';
 import { HourlyForecast } from './components/HourlyForecast';
 import { DailyForecast } from './components/DailyForecast';
 import { fetchWeatherData, WeatherApiError } from './services/weatherApi';
-import { majorCities } from './data/cities';
 import { Thermometer, AlertCircle } from 'lucide-react';
 
 function App() {
-  const [selectedCity, setSelectedCity] = useState<City | null>(majorCities[0]);
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('celsius');
   const [loading, setLoading] = useState(false);
@@ -101,6 +100,17 @@ function App() {
             </button>
           </div>
         </div>
+
+        {/* Initial State - No City Selected */}
+        {!selectedCity && !loading && (
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-12 text-center max-w-md">
+              <Thermometer className="text-white/60 mx-auto mb-4" size={64} />
+              <h2 className="text-2xl font-bold text-white mb-2">Welcome to Weather Forecast</h2>
+              <p className="text-white/80">Search for a city above to get started with real-time weather data</p>
+            </div>
+          </div>
+        )}
 
         {/* Loading State */}
         {loading && (

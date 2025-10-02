@@ -3,6 +3,7 @@ import { WeatherData, City } from '../types';
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
+const GEO_URL = 'https://api.openweathermap.org/geo/1.0';
 
 export class WeatherApiError extends Error {
   constructor(message: string, public status?: number) {
@@ -10,6 +11,47 @@ export class WeatherApiError extends Error {
     this.name = 'WeatherApiError';
   }
 }
+
+export const searchCities = async (query: string): Promise<City[]> => {
+  if (!API_KEY) {
+    throw new WeatherApiError('OpenWeatherMap API key is not configured');
+  }
+
+  if (!query || query.trim().length < 2) {
+    return [];
+  }
+
+  try {
+    const response = await fetch(
+      `${GEO_URL}/direct?q=${encodeURIComponent(query)}&limit=5&appid=${API_KEY}`
+    );
+
+    if (!response.ok) {
+      throw new WeatherApiError(
+        `Failed to search cities: ${response.statusText}`,
+        response.status
+      );
+    }
+
+    const data = await response.json();
+
+    return data.map((item: any) => ({
+      id: `${item.lat},${item.lon}`,
+      name: item.name,
+      country: item.country,
+      state: item.state,
+      coords: {
+        lat: item.lat,
+        lon: item.lon,
+      },
+    }));
+  } catch (error) {
+    if (error instanceof WeatherApiError) {
+      throw error;
+    }
+    throw new WeatherApiError(`Network error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+};
 
 export const fetchWeatherData = async (city: City): Promise<WeatherData> => {
   if (!API_KEY) {
