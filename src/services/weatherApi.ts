@@ -1,6 +1,6 @@
 import { WeatherData, City } from '../types';
 
-const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
+const API_KEY = 490fb98095a5f4b4e485fbecff646e2e
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 
 export class WeatherApiError extends Error {
